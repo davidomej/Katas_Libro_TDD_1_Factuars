@@ -6,13 +6,16 @@ class CsvFilter {
      val fields = invoice.split(',')
      val ivaFieldIndex = 4
      val igicFieldIndex  =5
-     val taxFieldsAreMutuallyExclusive=(fields[ivaFieldIndex].isNullOrEmpty() ||
-             fields[igicFieldIndex].isNullOrEmpty()) &&
-             (!(fields[ivaFieldIndex].isNullOrEmpty() &&
-                     fields[igicFieldIndex].isNullOrEmpty()))
+     val ivaField = fields[ivaFieldIndex]
+     val igicField = fields[igicFieldIndex]
+     val decimalRegex= "\\d+(\\.\\d+)?".toRegex()
+     val taxFieldsAreMutuallyExclusive=
+         (ivaField.matches(decimalRegex) ||
+                 igicField.matches(decimalRegex)) &&
+                 (!(ivaField.matches(decimalRegex) &&
+                         igicField.matches(decimalRegex)))
          if(taxFieldsAreMutuallyExclusive){
-
-         result.add(lines[1])
+             result.add(lines[1])
          }
      return result.toList()
  }
